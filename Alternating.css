@@ -1,0 +1,61 @@
+﻿body {
+    background-color: #FFFFFF;
+    font-family: Monospace;
+    font-size: 12pt;
+}
+td,th {
+    border: 0px solid black;
+    border-collapse: collapse;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+th {
+    color: rgb(120, 240, 7);
+    background-color: black;
+}
+table,tr,td,th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    white-space: normal; /* changed from pre to allow wrapping */
+}
+tr:nth-child(odd) {
+    background-color: lightgray
+}
+table {
+    table-layout: fixed;
+    margin-left: 25px;
+ /*    width: 95%; */
+    word-wrap: break-word;
+}
+h2 {
+    font-family: Tahoma;
+}
+.footer {
+    color: green;
+    font-style: italic;
+    margin-left: 25px;
+    font-family: Tahoma
+}
+.warning {
+    color: rgb(228, 127, 26);
+    font-weight: bold;
+}
+.alert {
+    color: red;
+    font-weight: bold;
+}
+.alertBg {
+    background-color: red !important;
+}
+.warningBg {
+    background-color: yellow !important;
+}
+.ok {
+    color:green;
+}
+.listProperty {
+    color:rgb(8, 58, 134);
+    font-weight: bold;
+}
