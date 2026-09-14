@@ -5,7 +5,11 @@ $path = "C:\Users\$($env:UserName)\Documents\WindowsPowerShell\profile.ps1"
 New-Item $path -Force | Out-Null
 $content = @'
 <# Establish Proxy Credentials #>
+$OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 $global:proxyAddress = 'http://172.31.245.222:8888'
+
 if (-Not $global:proxyUser -AND (Test-Path c:\proxy.txt)) {
     $global:proxyInfo = ((Get-Content c:\proxy.txt).split(":",3)).trim()
     $global:proxyUser = $global:proxyInfo[0]
