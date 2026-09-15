@@ -1,33 +1,13 @@
 #create PowerShell Profile scripts
 
-#PowerShell 5.1 profile
-$path = "C:\Users\$($env:UserName)\Documents\WindowsPowerShell\profile.ps1"
-New-Item $path -Force | Out-Null
+#content for PowerShell profile script in Windows PowerShell and PowerShell 7
 $content = @'
 <# Establish Proxy Credentials #>
+
 $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-$global:proxyAddress = 'http://172.31.245.222:8888'
-
-if (-Not $global:proxyUser -AND (Test-Path c:\proxy.txt)) {
-    $global:proxyInfo = ((Get-Content c:\proxy.txt).split(":",3)).trim()
-    $global:proxyUser = $global:proxyInfo[0]
-    $global:proxyPassword = $global:proxyInfo[1]
-}
-Try {
-    $v = Get-Variable proxyUser,proxyPassword -scope Global -errorAction Stop
-    $global:psecpasswd = ConvertTo-SecureString $global:proxyPassword -AsPlainText -Force
-    $global:proxyCredential = [System.Management.Automation.PSCredential]::New($global:proxyUser, $global:psecpasswd)
-    $global:wp = [System.Net.WebProxy]::new($global:proxyAddress)
-    $global:wp.Credentials = $global:proxyCredential
-    $global:webclient = New-Object System.Net.Webclient
-    $global:webclient.proxy = $global:wp
-    [System.Net.WebRequest]::DefaultWebProxy = $global:wp
-    }
-Catch {
-    Write-Warning "missing proxy information"
-}
+. c:\scripts\SetProxyConfig.ps1
 
 #re-establish default repository
 Try {
@@ -47,9 +27,15 @@ Set-Location C:\
 Clear-Host
 '@
 
-$content | Out-File $path
+#PowerShell 5.1 profile for all users current host
+$path = "C:\Windows\System32\WindowsPowerShell\v1.0\Microsoft.PowerShell_profile.ps1"
+New-Item $path -Force | Out-Null
+
+$content | Out-File $path -Force
+Get-Item $Path
 
 #PowerShell 7 profile
-$path = "C:\Users\$($env:username)\Documents\PowerShell\profile.ps1"
+$path = "C:\Program Files\PowerShell\7\Microsoft.PowerShell_profile.ps1"
 New-Item $path -Force | Out-Null
 $content | Out-File $path -Force
+Get-Item $Path
