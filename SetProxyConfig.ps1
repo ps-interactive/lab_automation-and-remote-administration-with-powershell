@@ -1,5 +1,6 @@
 #dot source this script
 $global:proxyAddress = 'http://172.31.245.222:8888'
+New-Item -Path ENV: -Name HTTP_Proxy -value $global:proxyAddress | Out-Null
 
 if (-Not $global:proxyUser -AND (Test-Path c:\proxy.txt)) {
     $global:proxyInfo = ((Get-Content c:\proxy.txt).split(":",3)).trim()
@@ -15,6 +16,7 @@ Try {
     $global:webclient = New-Object System.Net.Webclient
     $global:webclient.proxy = $global:wp
     [System.Net.WebRequest]::DefaultWebProxy = $global:wp
+
     }
 Catch {
     Write-Warning "missing proxy information"
