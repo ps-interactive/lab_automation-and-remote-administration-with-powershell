@@ -15,12 +15,11 @@ Try {
 }
 catch {
     Try {
-        Write-Host "Re-registering default repository" -foreground Green
-        Register-PSRepository -Default -ErrorAction Stop
+        Write-Host "Re-registering default repository with proxy credentials" -foreground yellow
+        Register-PSRepository -Default -Proxy $ProxyAddress -ProxyCredential $proxyCredential -errorAction Stop
     }
     Catch {
-        Write-Host "Re-registering default repository with proxy credentials" -foreground yellow
-        Register-PSRepository -Default -Proxy $ProxyAddress -ProxyCredential $proxyCredential
+        Write-Warning "Failed to re-register the PSGallery repository. $($_.Exception.Message)"
     }
 }
 Set-Location C:\
