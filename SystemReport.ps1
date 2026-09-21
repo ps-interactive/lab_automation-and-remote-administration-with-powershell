@@ -5,6 +5,7 @@ This script uses advances techniques with ConvertTo-Html to create
 an HTML report of system information from multiple computers.
 Each computer will have a separate HTML report saved to the specified
 directory.
+
 The HTML file will include an embedded CSS style sheet.
 #>
 
@@ -25,7 +26,7 @@ param(
     [Parameter(HelpMessage = "Specify the path to a CSS file.")]
     [ValidateScript({Test-Path -path $_})]
     [ValidatePattern('\.css$')]
-    [string]$CSSPath = '.\Alternating.css',
+    [string]$CSSPath = "$PSScriptRoot\Alternating.css",
 
     [Parameter(HelpMessage = "Specify the report title.")]
     [ValidateNotNullOrEmpty()]
@@ -142,10 +143,12 @@ if ($Credential) {
 
 #region process each computer separately
 foreach ($cn in $Computername) {
+    #update the splatting hashtable for each computer name
     $icmParams.Computername = $cn.ToUpper()
     $icmParams.JobName = "RemoteReportData-$cn"
     Write-Verbose "[$((Get-Date).TimeOfDay)] Invoking reporting scriptblock remotely on $($cn.ToUpper())"
     try {
+        #add each Invoke-Command job to the job array
         Invoke-Command @icmParams | ForEach-Object { $jobs.Add($_) }
     }
     catch {
@@ -365,3 +368,4 @@ $jobs | Remove-Job
 Write-Verbose "[$((Get-Date).TimeOfDay)] Ending $($MyInvocation.MyCommand.Source)"
 Write-Host "See $ReportFile for details." -ForegroundColor Green
 #endregion
+#EOF
