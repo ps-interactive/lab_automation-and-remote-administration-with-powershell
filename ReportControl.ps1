@@ -13,10 +13,10 @@ Try {
 Catch {
     #ignore errors
 }
-$domCred = Get-Credential -Message 'Enter DOMAIN credential' -UserName "$($env:USERDOMAIN)\Administrator"
+$domCred = Get-Credential -Message 'Enter DOMAIN credential' -UserName "$($env:USERDOMAIN)\altAdmin"
 
 $wg1 = 'Srv3'
-$wg1Cred = Get-Credential -Message "Enter $wg1 admin-level credential" -UserName "$wg1\Administrator"
+$wg1Cred = Get-Credential -Message "Enter $wg1 admin-level credential" -UserName "$wg1\rAdmin"
 
 #resolve full path to reporting script
 $scriptPath = Convert-Path $PSScriptRoot\SystemReport.ps1
@@ -44,7 +44,7 @@ foreach ($file in $files) {
     #parse the server name from the file name
     $name = $file.name.split('_')[2]
     if ($name -in $domain -AND $dn) {
-        #append domain FQDNwho
+        #append domain FQDN
         $name+=".$dn"
     }
     $link = "<a href=$($file.name) target=_blank>$Name</a>"
