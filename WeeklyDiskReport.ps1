@@ -2,18 +2,29 @@
 
 <#
 It is assumed this code is being executed with credentials
-that have admin rights on the remote computers
+that have admin rights on the remote computers. This script is designed to
+be run as an unattended scheduled task or job
 #>
-param(
-  [Parameter(Mandatory)]
-  [ValidateNotNullOrEmpty()]
-  [string[]]$Computername,
-
-  [ValidateScript({Test-Path $_})]
-  [string]$CSVPath = 'C:\reports\DiskReport.csv'
-)
 
 Write-Host "[$(Get-Date)] Starting disk usage job" -ForegroundColor Green
+<#
+Define a list of computers to query. The list must be in the same
+directory as this script. Use a hardcoded path instead of $PSScriptRoot
+which might not get defined
+#>
+$List = "c:\scripts\diskUsageList.txt"
+
+If (Test-Path $list) {
+  $Computername = Get-Content -path $list
+}
+else {
+  Write-Warning "Failed to find $list"
+  Write-Host "[$(Get-Date)] Job aborted!" -ForegroundColor Red
+}
+
+#define the path to the CSV File
+$CSVPath = 'C:\reports\DiskReport.csv'
+
 $data = @()
 
 foreach ($computer in $computername) {
