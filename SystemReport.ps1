@@ -170,7 +170,7 @@ Write-Verbose "[$((Get-Date).TimeOfDay)] Waiting for $($jobs.count) jobs to comp
 #Process jobs in the order I want them processed
 Write-Verbose "[$((Get-Date).TimeOfDay)] Processing job data"
 
-$global:d = $data = $jobs | Receive-Job -Keep | Sort-Object -Property Computername
+$data = $jobs | Receive-Job -Keep | Sort-Object -Property Computername
 
 Write-Verbose "[$((Get-Date).TimeOfDay)] Building report from $($data.count) sources"
 $data | Group-Object -Property Computername | ForEach-Object -Begin {

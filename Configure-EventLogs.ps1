@@ -12,8 +12,7 @@ param(
     )]
     [int64]$MaximumSize,
     [ValidateSet('Circular', 'Retain', 'AutoBackup')]
-    [string]$LogMode = 'Circular',
-    [switch]$Passthru
+    [string]$LogMode = 'Circular'
 )
 
 foreach ($logItem in $logName) {
@@ -24,11 +23,11 @@ foreach ($logItem in $logName) {
             $log.LogMode = $LogMode
             $log.SaveChanges()
         }
-        if ($Passthru) {
-            Get-WinEvent -ListLog $LogItem |
-            Select-Object LogName, MaximumSizeInBytes, LogMode,
-            @{Name = 'Computername'; Expression = { $env:COMPUTERNAME }}
-        }
+
+        Get-WinEvent -ListLog $LogItem |
+        Select-Object LogName, MaximumSizeInBytes, LogMode,
+        @{Name = 'Computername'; Expression = { $env:COMPUTERNAME } }
+
     }
     catch {
         Write-Warning "[$($env:computername)] Failed to configure the specified event log, $LogName. $($_.Exception.Message)" -ErrorAction Stop
