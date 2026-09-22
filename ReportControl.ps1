@@ -2,11 +2,12 @@
 #requires -module Microsoft.PowerShell.ThreadJob
 
 #control script for system reporting
+#This script will also create a main navigation HTML page
 
 Param([string]$ReportPath = 'C:\reports')
 
 $domain = 'Dom1', 'Srv1', 'Srv2'
-#It is assumed this script will be run on a domain join computer
+#It is assumed this script will be run on a domain-joined computer
 Try {
     $dn = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().Name
 }
@@ -71,4 +72,5 @@ table {
 </style>
 "@
 ConvertTo-Html -Body ($fragments | Out-String) -head $head | Out-File -FilePath $out
-Get-Item $out
+#using Out-Host in the script so that the output if properly formatted
+Get-Item $out | Out-Host
