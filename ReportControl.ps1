@@ -6,15 +6,15 @@
 
 Param([string]$ReportPath = 'C:\reports')
 
-$domain = 'Dom1', 'Srv1', 'Srv2'
+$domain = 'DC1', 'Srv1', 'Srv2'
 #It is assumed this script will be run on a domain-joined computer
 Try {
-    $dn = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().Name
+    $dn = [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain().Name
 }
 Catch {
     #ignore errors
 }
-$domCred = Get-Credential -Message 'Enter DOMAIN credential' -UserName "$($env:USERDOMAIN)\altAdmin"
+$domCred = Get-Credential -Message 'Enter DOMAIN credential' -UserName "$dn\altAdmin"
 
 $wg1 = 'Srv3'
 $wg1Cred = Get-Credential -Message "Enter $wg1 admin-level credential" -UserName "$wg1\rAdmin"
@@ -54,13 +54,15 @@ foreach ($file in $files) {
         Server     = '_Placeholder_'
         Date       = $file.LastWriteTime
         ReportSize = '{0}KB' -f ($file.Length / 1kb -as [int])
+        Version    = '1.7.2'  #Use the stand-alone version number from SystemReport.ps1
     } | ConvertTo-Html -As Table -Fragment
+
     #insert the correct HTML code now
     $html = $html.Replace('_Placeholder_', $link)
     $fragments.Add($html)
 }
 
-#Import CSS as header
+#Import CSS as a header
 #append a table width to force a width in this report
 $head = @"
 <title>System Reports $($dt.toString('d'))</title>
@@ -72,5 +74,6 @@ table {
 </style>
 "@
 ConvertTo-Html -Body ($fragments | Out-String) -head $head | Out-File -FilePath $out
-#using Out-Host in the script so that the output if properly formatted
+
+#using Out-Host in the script so that the output is properly formatted
 Get-Item $out | Out-Host
