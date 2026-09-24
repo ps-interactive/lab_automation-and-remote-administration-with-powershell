@@ -6,7 +6,7 @@
 
 Param([string]$ReportPath = 'C:\reports')
 
-$domain = 'DC1', 'Srv1', 'Srv2'
+$domain = 'DC01', 'Srv1', 'Srv2'
 #It is assumed this script will be run on a domain-joined computer
 Try {
     $dn = [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain().Name
