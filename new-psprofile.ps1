@@ -2,11 +2,14 @@
 
 #content for PowerShell profile script in Windows PowerShell and PowerShell 7
 $content = @'
-<# Establish Proxy Credentials #>
-
 $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+Set-Location C:\
+Clear-Host
 
+return
+#the remaining code is for future use
+<# Establish Proxy Credentials #>
 . c:\scripts\SetProxyConfig.ps1
 
 #re-establish default repository
@@ -22,8 +25,7 @@ catch {
         Write-Warning "Failed to re-register the PSGallery repository. $($_.Exception.Message)"
     }
 }
-Set-Location C:\
-Clear-Host
+
 '@
 
 #PowerShell 5.1 profile for all users current host
